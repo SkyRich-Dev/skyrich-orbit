@@ -1,0 +1,228 @@
+PROJECT OVERVIEW
+Build a modern, high-converting corporate website for:
+Brand Name: SkyRich Orbit
+Parent Company: SkyRich Tech Solution Pte Ltd
+Target Market: SMEs in ASEAN region (Singapore, Thailand, Malaysia, Indonesia, India)
+Purpose: Lead generation + authority building + blog publishing
+Style: Modern, dark-tech, new-age, premium
+Framework: React (Vite or Next.js preferred if SSR needed for SEO)
+TECH STACK REQUIREMENTS
+Frontend:
+React (Vite or Next.js preferred)
+TailwindCSS
+Framer Motion (for animations)
+React Router (if not Next.js)
+React Hook Form
+Axios
+SEO support (React Helmet or Next SEO)
+Blog CMS-ready structure (Markdown or Headless CMS ready)
+Backend (optional for lead form):
+Node.js + Express OR serverless function
+Nodemailer (for contact form email)
+Store leads in MongoDB or Supabase
+WEBSITE STRUCTURE
+Create the following routes:
+/
+/about
+/services
+/services/orbit-build
+/services/orbit-reach
+/services/orbit-convert
+/services/orbit-automate
+/services/orbit-insights
+/industries
+/framework
+/blog
+/blog/:slug
+/resources
+/contact
+DESIGN REQUIREMENTS
+Theme:
+Dark navy background (#0B0F1A)
+Electric blue gradient accents
+Subtle glowing buttons
+Orbit-style animated background lines
+Soft card shadows
+Rounded 2xl corners
+Smooth scroll
+Micro hover animations
+Typography:
+Clean sans-serif (Inter or similar)
+Large bold headings
+Spacious layout
+Premium spacing system
+Add:
+Sticky header with CTA button
+Floating WhatsApp button
+Footer with newsletter signup
+Animated hero section
+CONTENT IMPLEMENTATION
+Use the structured content below (do NOT rewrite, use as-is):
+HOME PAGE CONTENT
+Hero Section:
+Headline: Digital Growth Systems for ASEAN SMEs
+Subheadline: SkyRich Orbit builds structured digital ecosystems combining website engineering, performance marketing, automation, and analytics to help Southeast Asian businesses scale predictably.
+Primary CTA: Get Your Growth Strategy
+Secondary CTA: Explore Our Ecosystem
+Section: Most SMEs in ASEAN Don’t Need More Marketing — They Need a System
+(Include structured paragraph about disconnected tools and fragmented data)
+Section: The Orbit Framework
+List 5 modules:
+Orbit Build
+Orbit Reach
+Orbit Convert
+Orbit Automate
+Orbit Insights
+Add lead capture form:
+Fields:
+Name
+Company
+Country (dropdown ASEAN countries)
+Website
+Email
+WhatsApp
+Monthly Marketing Budget Range
+Submit button: Start My Assessment
+ABOUT PAGE
+Title: About SkyRich Orbit
+Include:
+Purpose statement
+System-based approach
+ASEAN focus
+Growth engineering mindset
+SERVICES MASTER PAGE
+Title: Digital Services Structured for Scalable Growth
+Brief introduction + link cards to each service page.
+ORBIT BUILD PAGE
+Title: Website Development for ASEAN SMEs
+Include service list:
+Corporate websites
+E-commerce
+Landing funnels
+UX/UI
+Technical SEO
+CMS
+CTA: Build My Website
+ORBIT REACH PAGE
+Title: Digital Marketing & Traffic Acquisition
+Include:
+Google Ads
+Meta Ads
+LinkedIn Ads
+SEO
+Content Marketing
+CTA: Launch My Campaign
+ORBIT CONVERT PAGE
+Title: Conversion Optimization & Funnel Systems
+Include:
+Funnel architecture
+Landing page testing
+Behavioral tracking
+Offer optimization
+CTA: Improve My Conversions
+ORBIT AUTOMATE PAGE
+Title: CRM & Marketing Automation for SMEs
+Include:
+CRM setup
+WhatsApp automation
+Email workflows
+AI chatbot integration
+CTA: Automate My Business
+ORBIT INSIGHTS PAGE
+Title: Digital Analytics & Performance Intelligence
+Include:
+KPI dashboards
+ROI tracking
+Growth forecasting
+Data strategy
+CTA: Analyze My Growth
+INDUSTRIES PAGE
+List industries:
+Professional Services
+E-Commerce & Retail
+Education
+Healthcare
+Manufacturing
+Tech Startups
+Each with short challenge + solution paragraph.
+FRAMEWORK PAGE
+Title: The Orbit Growth Framework
+Phases:
+Diagnose
+Architect
+Deploy
+Optimize
+Scale
+BLOG SYSTEM
+Implement:
+Dynamic blog route (/blog/:slug)
+Markdown-based blog posts
+Category filter
+SEO meta per blog
+Pagination
+Related posts section
+Blog categories:
+Digital Marketing
+Website Optimization
+Automation
+AI for SMEs
+ASEAN Market Trends
+RESOURCES PAGE
+Create gated downloads:
+ASEAN SME Digital Checklist
+Website Conversion Audit Template
+Marketing Budget Planner
+CRM Setup Guide
+Require email submission before download.
+CONTACT PAGE
+Form fields:
+Name
+Company
+Country
+Website
+Business Goal
+Budget Range
+Email
+Phone
+Add validation.
+On submit:
+Save to database
+Send email notification
+Show success message
+SEO REQUIREMENTS
+Proper single H1 per page
+Meta title & description per route
+OpenGraph tags
+Sitemap generation
+robots.txt
+Structured data schema (Organization + Service)
+Fast loading performance
+Lazy load images
+Mobile responsive
+Lighthouse score optimized
+LEAD CONVERSION REQUIREMENTS
+Sticky “Get Growth Strategy” button
+Exit intent modal
+Newsletter popup after 30 seconds
+WhatsApp floating CTA
+CTA buttons after every major section
+ADDITIONAL FEATURES
+Admin-ready blog folder
+Easily editable content sections
+Environment variables for email
+Clean folder structure
+Reusable components
+Modular section components
+SEO-ready deployment build
+FINAL OUTPUT EXPECTATION
+The output must:
+Be fully functional
+Production ready
+No placeholder lorem ipsum
+No fake testimonials
+No fake numbers
+Clean code structure
+Proper component architecture
+SEO optimized
+Mobile-first responsive
+END OF PROMPT

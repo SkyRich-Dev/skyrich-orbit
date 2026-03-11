@@ -1,0 +1,89 @@
+I need you to implement a complete cookie management and user behavior tracking system on the website.
+
+Objectives:
+1. Track visitor behavior to understand how users interact with the website.
+2. Enable marketing analytics and retargeting campaigns.
+3. Ensure privacy compliance with GDPR and PDPA.
+4. Display a cookie consent banner for users.
+
+Requirements:
+
+1. Cookie Consent Banner
+Create a modern cookie consent popup that appears when a user first visits the website.
+The banner must include:
+- Accept All Cookies
+- Reject Non-Essential Cookies
+- Manage Preferences
+
+Store the user’s consent choice in a cookie so the banner does not appear again after acceptance.
+
+2. Cookie Categories
+Implement cookie categories:
+
+Essential Cookies
+Required for website functionality.
+
+Analytics Cookies
+Track page views, user sessions, scroll depth, and time spent on pages.
+
+Marketing Cookies
+Used for retargeting and advertising tracking.
+
+3. User Behavior Tracking
+Create cookies that store anonymized behavioral data such as:
+
+- pages visited
+- visit timestamps
+- session duration
+- returning visitor identification
+- scroll depth
+
+Use this data for analytics and CRM integration.
+
+4. Integration with Analytics Tools
+Integrate the following:
+
+Google Analytics tracking
+Facebook / Meta Pixel tracking
+
+Tracking scripts must only activate after the user consents to analytics or marketing cookies.
+
+5. Data Layer Structure
+Create a structured data layer so marketing tools can easily capture events such as:
+
+PageView
+PricingPageVisit
+DemoRequestClick
+ContactFormSubmission
+
+6. Event Tracking
+Track important actions:
+
+- visiting the pricing page
+- clicking “Book Demo”
+- submitting contact forms
+- returning visits
+
+7. Performance
+Ensure the cookie system:
+- loads asynchronously
+- does not slow down the website
+- works on desktop and mobile browsers
+
+8. Admin Visibility
+Provide a way to export or send behavioral data to the backend so it can be used in SkyRich Orbit CRM for lead scoring.
+
+9. Security
+Cookies must be:
+- secure
+- sameSite protected
+- HTTP-only when applicable
+
+10. UI Design
+The cookie banner should match the design style of the SkyRich Orbit website.
+
+Deliverables:
+- cookie consent component
+- behavior tracking script
+- analytics integration
+- documentation on how the system works
