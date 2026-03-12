@@ -79,12 +79,29 @@ export async function registerRoutes(
 ): Promise<Server> {
 
   const session = (await import("express-session")).default;
-  const connectPgSimple = (await import("connect-pg-simple")).default;
-  const PgStore = connectPgSimple(session);
+  
+  let sessionStore: any;
+  
+  try {
+    const connectPgSimple = (await import("connect-pg-simple")).default;
+    const PgStore = connectPgSimple(session);
+    sessionStore = new PgStore({ 
+      conString: process.env.DATABASE_URL, 
+      createTableIfMissing: true,
+      pool: undefined, // Let it create its own pool
+      ttl: 24 * 60 * 60 // 24 hours
+    });
+    console.log("Using PostgreSQL session store");
+  } catch (error) {
+    console.warn("PostgreSQL session store failed:", error instanceof Error ? error.message : error);
+    console.log("Falling back to MemoryStore");
+    const MemoryStore = (await import("memorystore")).default;
+    sessionStore = new MemoryStore({ checkPeriod: 86400000 }); // prune every 24h
+  }
 
   app.use(
     session({
-      store: new PgStore({ conString: process.env.DATABASE_URL, createTableIfMissing: true }),
+      store: sessionStore,
       secret: process.env.SESSION_SECRET || "skyrich-orbit-admin-secret-2024",
       resave: false,
       saveUninitialized: false,
