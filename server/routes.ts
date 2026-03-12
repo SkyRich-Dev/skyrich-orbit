@@ -120,7 +120,8 @@ export async function registerRoutes(
       (req as any).session.adminId = admin.id;
       (req as any).session.save((err: any) => {
         if (err) {
-          return res.status(500).json({ message: "Login failed" });
+          console.error("Session save error:", err);
+          return res.status(500).json({ message: "Login failed", error: err.message });
         }
         return res.json({ id: admin.id, username: admin.username });
       });
