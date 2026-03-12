@@ -118,7 +118,12 @@ export async function registerRoutes(
         return res.status(401).json({ message: "Invalid credentials" });
       }
       (req as any).session.adminId = admin.id;
-      return res.json({ id: admin.id, username: admin.username });
+      (req as any).session.save((err: any) => {
+        if (err) {
+          return res.status(500).json({ message: "Login failed" });
+        }
+        return res.json({ id: admin.id, username: admin.username });
+      });
     } catch (error) {
       return res.status(500).json({ message: "Login failed" });
     }
