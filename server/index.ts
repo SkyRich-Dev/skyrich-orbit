@@ -26,12 +26,15 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 
 app.get(["/growth/", "/growth/index.html"], (_req, res) => {
-  const growthIndexPath = path.resolve(
-    process.cwd(),
+  const growthIndexPath =
     process.env.NODE_ENV === "production"
-      ? "dist/public/growth/index.html"
-      : "client/public/growth/index.html",
-  );
+      ? path.resolve(
+          path.dirname(process.argv[1] || process.cwd()),
+          "public",
+          "growth",
+          "index.html",
+        )
+      : path.resolve(process.cwd(), "client", "public", "growth", "index.html");
 
   res.sendFile(growthIndexPath);
 });
