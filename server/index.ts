@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import dotenv from "dotenv";
+import path from "path";
 dotenv.config();
 
 const app = express();
@@ -23,6 +24,17 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false }));
+
+app.get(["/growth/", "/growth/index.html"], (_req, res) => {
+  const growthIndexPath = path.resolve(
+    process.cwd(),
+    process.env.NODE_ENV === "production"
+      ? "dist/public/growth/index.html"
+      : "client/public/growth/index.html",
+  );
+
+  res.sendFile(growthIndexPath);
+});
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {

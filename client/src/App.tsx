@@ -9,6 +9,7 @@ import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout/Layout";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
+import Growth from "@/pages/Growth";
 import Services from "@/pages/Services";
 import OrbitBuild from "@/pages/services/OrbitBuild";
 import OrbitReach from "@/pages/services/OrbitReach";
@@ -55,6 +56,7 @@ function Router() {
       <Route path="/">
         <Layout><Home /></Layout>
       </Route>
+      <Route path="/growth" component={Growth} />
       <Route path="/about">
         <Layout><About /></Layout>
       </Route>
