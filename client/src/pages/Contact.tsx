@@ -31,6 +31,7 @@ export default function Contact() {
         challenges: formData.get("challenges") || null,
         source: "contact",
       });
+      form.reset();
       setSubmitted(true);
       trackContactSubmission("contact");
     } catch (err) {

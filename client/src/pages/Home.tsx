@@ -10,10 +10,12 @@ import { trackContactSubmission, trackDemoClick } from "@/lib/behaviorTracker";
 export default function Home() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const handleAssessmentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormLoading(true);
+    setFormError("");
     const form = e.currentTarget;
     const fd = new FormData(form);
     try {
@@ -25,10 +27,14 @@ export default function Home() {
         country: fd.get("country") || null,
         source: "home-assessment",
       });
+      form.reset();
       setFormSubmitted(true);
       trackContactSubmission("home-assessment");
-    } catch { }
-    setFormLoading(false);
+    } catch {
+      setFormError("Something went wrong. Please try again or email us directly.");
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   const homeFaqs = [
@@ -241,6 +247,11 @@ export default function Home() {
                 </div>
               ) : (
                 <form className="flex flex-col gap-4" onSubmit={handleAssessmentSubmit}>
+                  {formError && (
+                    <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300" data-testid="text-home-form-error">
+                      {formError}
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-300 ml-1">Name</label>

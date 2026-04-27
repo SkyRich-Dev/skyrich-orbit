@@ -8,6 +8,15 @@ function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password).digest("hex");
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function adminAuth(req: Request, res: Response, next: NextFunction) {
   if (!(req as any).session?.adminId) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -26,8 +35,25 @@ async function sendContactEmail(data: {
   budget?: string | null;
   challenges?: string | null;
   source: string;
+  createdAt?: Date;
 }) {
-  const sgApiKey = process.env.SENDGRID_API_KEY;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  const contactRecipient = process.env.CONTACT_NOTIFICATION_EMAIL || "info@skyrichorbit.com";
+  const fromEmail = process.env.SMTP_FROM_EMAIL || smtpUser || "info@skyrichorbit.com";
+  const submittedAt = data.createdAt?.toISOString() || new Date().toISOString();
+  const emailFields = [
+    ["Name", data.fullName],
+    ["Company", data.company],
+    ["Email", data.email],
+    ["Job Title", data.jobTitle || "N/A"],
+    ["Country", data.country || "N/A"],
+    ["Website", data.websiteUrl || "N/A"],
+    ["Business Goal", data.businessGoal || "N/A"],
+    ["Budget", data.budget || "N/A"],
+    ["Source", data.source],
+    ["Submitted At", submittedAt],
+  ] as const;
 
   const emailBody = `
 New Contact Form Submission
@@ -41,36 +67,63 @@ Website: ${data.websiteUrl || "N/A"}
 Business Goal: ${data.businessGoal || "N/A"}
 Budget: ${data.budget || "N/A"}
 Source: ${data.source}
+Submitted At: ${submittedAt}
 
 Challenges:
 ${data.challenges || "N/A"}
   `.trim();
 
-  if (sgApiKey) {
-    try {
-      const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${sgApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          personalizations: [{ to: [{ email: "info@skyrichorbit.com" }] }],
-          from: { email: "noreply@skyrichorbit.com", name: "SkyRich Orbit Website" },
-          subject: `New Lead: ${data.fullName} from ${data.company}`,
-          content: [{ type: "text/plain", value: emailBody }],
-        }),
-      });
-      if (!response.ok) {
-        console.error("SendGrid error:", await response.text());
-      }
-    } catch (error) {
-      console.error("Email send error:", error);
-    }
-  } else {
-    console.log("No SENDGRID_API_KEY set. Email would be sent to info@skyrichorbit.com:");
-    console.log(emailBody);
+  const emailHtml = `
+    <div style="font-family:Arial,Helvetica,sans-serif;background:#f8fafc;padding:24px;color:#0f172a;">
+      <div style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
+        <div style="padding:24px 28px;background:#0f172a;color:#f8fafc;">
+          <p style="margin:0 0 8px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#67e8f9;">SkyRich Orbit</p>
+          <h2 style="margin:0;font-size:24px;line-height:1.3;">New Contact Form Submission</h2>
+        </div>
+        <div style="padding:24px 28px;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+            ${emailFields
+              .map(
+                ([label, value]) => `
+                  <tr>
+                    <td style="padding:12px 0;border-bottom:1px solid #e2e8f0;font-weight:600;width:180px;vertical-align:top;">${escapeHtml(label)}</td>
+                    <td style="padding:12px 0;border-bottom:1px solid #e2e8f0;color:#334155;">${escapeHtml(value)}</td>
+                  </tr>`,
+              )
+              .join("")}
+            <tr>
+              <td style="padding:12px 0 0;font-weight:600;vertical-align:top;">Challenges</td>
+              <td style="padding:12px 0 0;color:#334155;white-space:pre-wrap;">${escapeHtml(data.challenges || "N/A")}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  `.trim();
+
+  if (!smtpUser || !smtpPass) {
+    throw new Error("SMTP_USER and SMTP_PASS must be configured");
   }
+
+  const nodemailer = await import("nodemailer");
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: parseInt(process.env.SMTP_PORT || "465", 10),
+    secure: (process.env.SMTP_SECURE || "true").toLowerCase() === "true",
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
+  });
+
+  await transporter.sendMail({
+    from: `SkyRich Orbit <${fromEmail}>`,
+    to: contactRecipient,
+    replyTo: data.email,
+    subject: `New Lead: ${data.fullName} from ${data.company}`,
+    text: emailBody,
+    html: emailHtml,
+  });
 }
 
 export async function registerRoutes(
@@ -221,7 +274,18 @@ export async function registerRoutes(
     try {
       const parsed = insertContactSchema.parse(req.body);
       const submission = await storage.createContactSubmission(parsed);
-      await sendContactEmail(parsed);
+      try {
+        await sendContactEmail({
+          ...parsed,
+          createdAt: submission.createdAt,
+        });
+      } catch (error) {
+        console.error("Contact email failed:", error);
+        return res.status(502).json({
+          message: "Submission saved, but email delivery failed. Check SMTP configuration.",
+          id: submission.id,
+        });
+      }
       return res.status(201).json({ message: "Submission received", id: submission.id });
     } catch (error: any) {
       return res.status(400).json({ message: error.message || "Invalid data" });
